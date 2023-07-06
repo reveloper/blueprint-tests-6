@@ -45,6 +45,7 @@ describe('TrickContract', () => {
             from: sender.address,
             to: main.address,
             success: true,
+            outMessagesCount: 1
 
         });
 

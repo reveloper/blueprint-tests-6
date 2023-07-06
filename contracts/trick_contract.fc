@@ -41,12 +41,6 @@ slice payload_encoding(int a, int b, int c) {
 
     slice sender = cs~load_msg_addr();
 
-    slice addr = load_data();
-
-    ifnot (equal_slices(sender, addr)) {
-        throw(500);
-    }
-
     int op = in_msg_body~load_uint(32);
 
     if (op == 1) {

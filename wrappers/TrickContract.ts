@@ -1,9 +1,13 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from 'ton-core';
 
-export type TrickContractConfig = {};
+export type TrickContractConfig = {
+    addr: Address
+};
 
 export function trickContractConfigToCell(config: TrickContractConfig): Cell {
-    return beginCell().endCell();
+    return beginCell()
+        .storeAddress(config.addr)
+        .endCell();
 }
 
 export class TrickContract implements Contract {

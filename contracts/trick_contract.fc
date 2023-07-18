@@ -5,16 +5,15 @@ slice load_data() {
     return ds~load_msg_addr();
 }
 
-slice payload_encoding(int a, int b, int c) {
+builder payload_encoding(int a, int b, int c) inline_ref {
     return
             begin_cell().store_uint(a,8)
                     .store_uint(b,8)
-                    .store_uint(c,8)
-                    .end_cell().begin_parse();
+                    .store_uint(c,8);
 }
 
-() send_message(slice destination) impure {
-    slice payload = payload_encoding(1, 7, 12);
+() send_message(slice destination) impure inline_ref {
+    builder payload = payload_encoding(1, 7, 12);
     var msg = begin_cell()
             .store_uint(0x18, 6)
             .store_slice(destination)
@@ -22,7 +21,7 @@ slice payload_encoding(int a, int b, int c) {
             .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1) ;; some flags related to message header
             .store_uint(0x33bbff77, 32) ;; op-code (see smart-contract guidelines)
             .store_uint(cur_lt(), 64)  ;; query_id (see smart-contract guidelines)
-            .store_slice(payload)
+            .store_builder(payload)
             .end_cell();
     send_raw_message(msg, 64);
 }
@@ -40,6 +39,14 @@ slice payload_encoding(int a, int b, int c) {
     }
 
     slice sender = cs~load_msg_addr();
+
+    slice addr = load_data();
+
+    ;;ifnot (equal_slices(sender, addr)) {
+    ;;   throw(500);
+    ;;}
+
+    throw_unless(500, equal_slices(sender, addr));
 
     int op = in_msg_body~load_uint(32);
 

@@ -3,6 +3,7 @@ import { Cell, toNano } from 'ton-core';
 import { TrickContract } from '../wrappers/TrickContract';
 import '@ton-community/test-utils';
 import { compile } from '@ton-community/blueprint';
+import {randomAddress} from "@ton-community/test-utils";
 
 describe('TrickContract', () => {
     let code: Cell;
@@ -19,7 +20,9 @@ describe('TrickContract', () => {
         blockchain = await Blockchain.create();
         sender = await blockchain.treasury('sender');
 
-        main = blockchain.openContract(TrickContract.createFromConfig({}, code));
+        main = blockchain.openContract(TrickContract.createFromConfig({
+            addr: randomAddress()
+        }, code));
 
         const deployer = await blockchain.treasury('deployer');
 
@@ -33,12 +36,17 @@ describe('TrickContract', () => {
         });
     });
 
-    it('should deploy', async () => {
+   it('should deploy', async () => {
         // the check is done inside beforeEach
         // blockchain and trickContract are ready to use
     });
 
-    it('should send message', async () => {
+    it('should throw calculate fees', async () => {
+
+        const time1 = Date.now() / 100;
+        const time2 = time1 + 24 * 60 * 60;  // offset 1 day
+
+        blockchain.now = time1;
         const res = await main.sendMessage(sender.getSender(), toNano('0.05'));
 
         expect(res.transactions).toHaveTransaction({
@@ -46,9 +54,27 @@ describe('TrickContract', () => {
             to: main.address,
             success: true,
             outMessagesCount: 1
-
         });
 
+
         printTransactionFees(res.transactions);
+        console.log(res.transactions[1])
+
+
+        blockchain.now = time2;
+        const res2 = await main.sendMessage(sender.getSender(), toNano('0.05'));
+
+        expect(res.transactions).toHaveTransaction({
+            from: sender.address,
+            to: main.address,
+            success: true,
+            outMessagesCount: 1
+        });
+
+        printTransactionFees(res2.transactions);
+        console.log(res2.transactions[1])
     })
+
 });
+
+

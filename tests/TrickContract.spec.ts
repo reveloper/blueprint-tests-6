@@ -1,9 +1,8 @@
 import { Blockchain, SandboxContract, TreasuryContract, printTransactionFees } from '@ton-community/sandbox';
-import { Cell, toNano } from 'ton-core';
+import { Cell, toNano } from '@ton/core';
 import { TrickContract } from '../wrappers/TrickContract';
-import '@ton-community/test-utils';
-import { compile } from '@ton-community/blueprint';
-import {randomAddress} from "@ton-community/test-utils";
+import '@ton/test-utils';
+import { compile } from '@ton/blueprint';
 
 describe('TrickContract', () => {
     let code: Cell;

@@ -1,7 +1,8 @@
-import { Blockchain, SandboxContract, TreasuryContract, printTransactionFees } from '@ton-community/sandbox';
+import { Blockchain, SandboxContract, TreasuryContract, printTransactionFees } from '@ton/sandbox';
 import { Cell, toNano } from '@ton/core';
 import { TrickContract } from '../wrappers/TrickContract';
 import '@ton/test-utils';
+import {randomAddress} from "@ton-community/test-utils";
 import { compile } from '@ton/blueprint';
 
 describe('TrickContract', () => {
@@ -43,7 +44,7 @@ describe('TrickContract', () => {
     it('should throw calculate fees', async () => {
 
         const time1 = Math.floor(Date.now() / 1000)
-        const time2 = time1 + 24 * 60 * 60;  // offset 1 day
+        const time2 = time1 + 365 * 24 * 60 * 60;  // offset 1 year
 
         blockchain.now = time1;
         const res = await main.sendMessage(sender.getSender(), toNano('0.05'));

@@ -72,7 +72,7 @@ describe('TrickContract', () => {
         });
 
         printTransactionFees(res2.transactions);
-        console.log(res2.transactions[1])
+        console.log(res2.transactions[1]);
     })
 
 });

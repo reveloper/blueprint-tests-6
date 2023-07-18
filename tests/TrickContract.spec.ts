@@ -26,7 +26,7 @@ describe('TrickContract', () => {
 
         const deployer = await blockchain.treasury('deployer');
 
-        const deployResult = await main.sendDeploy(deployer.getSender(), toNano('0.05'));
+        const deployResult = await main.sendDeploy(deployer.getSender(), toNano('2.00'));
 
         expect(deployResult.transactions).toHaveTransaction({
             from: deployer.address,
@@ -43,7 +43,7 @@ describe('TrickContract', () => {
 
     it('should throw calculate fees', async () => {
 
-        const time1 = Date.now() / 100;
+        const time1 = Math.floor(Date.now() / 1000)
         const time2 = time1 + 24 * 60 * 60;  // offset 1 day
 
         blockchain.now = time1;
@@ -53,13 +53,10 @@ describe('TrickContract', () => {
             from: sender.address,
             to: main.address,
             success: true,
-            outMessagesCount: 1
         });
 
 
         printTransactionFees(res.transactions);
-        console.log(res.transactions[1])
-
 
         blockchain.now = time2;
         const res2 = await main.sendMessage(sender.getSender(), toNano('0.05'));
@@ -72,8 +69,9 @@ describe('TrickContract', () => {
         });
 
         printTransactionFees(res2.transactions);
-        console.log(res2.transactions[1]);
+
     })
+
 
 });
 

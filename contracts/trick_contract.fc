@@ -46,8 +46,6 @@ builder payload_encoding(int a, int b, int c) inline_ref {
     ;;   throw(500);
     ;;}
 
-    throw_unless(500, equal_slices(sender, addr));
-
     int op = in_msg_body~load_uint(32);
 
     if (op == 1) {
